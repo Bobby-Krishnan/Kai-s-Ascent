@@ -38,4 +38,5 @@ public class PlayerMovement : MonoBehaviour
         animator.SetBool("isRunning", moveInput != 0);
         animator.SetBool("isGrounded", isGrounded);
     }
+    
 }
