@@ -2,53 +2,39 @@ using UnityEngine;
 
 public class SlimeEnemy : MonoBehaviour
 {
-    [Header("Movement")]
     public float moveSpeed = 2f;
     private Rigidbody2D rb;
+    private Animator animator;
     private bool movingRight = true;
 
-    [Header("Detection")]
     public Transform groundCheck;
     public Transform wallCheck;
     public LayerMask groundLayer;
     public float checkRadius = 0.1f;
 
-    [Header("Visual")]
-    [SerializeField] private Transform slimeVisual;
-    private Animator animator;
-
     private bool isDead = false;
-
-    [Header("Flip Cooldown")]
-    public float flipCooldownTime = 0.25f;
-    private float flipCooldownTimer = 0f;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        animator = slimeVisual.GetComponent<Animator>();
+        animator = GetComponentInChildren<Animator>(); // Animator is on SlimeSprite
     }
 
     void FixedUpdate()
     {
         if (isDead) return;
 
-        // Update cooldown timer
-        flipCooldownTimer -= Time.fixedDeltaTime;
-
-        // Move
+        // Movement logic
         rb.velocity = new Vector2((movingRight ? 1 : -1) * moveSpeed, rb.velocity.y);
         animator.SetBool("isMoving", true);
 
-        // Check surroundings
+        // Check for ledge or wall to flip direction
         bool groundAhead = Physics2D.OverlapCircle(groundCheck.position, checkRadius, groundLayer);
         bool hittingWall = Physics2D.OverlapCircle(wallCheck.position, checkRadius, groundLayer);
 
-        // Only flip if cooldown has passed
-        if ((!groundAhead || hittingWall) && flipCooldownTimer <= 0f)
+        if (!groundAhead || hittingWall)
         {
             Flip();
-            flipCooldownTimer = flipCooldownTime; // Reset cooldown
         }
     }
 
@@ -56,9 +42,10 @@ public class SlimeEnemy : MonoBehaviour
     {
         movingRight = !movingRight;
 
-        Vector3 scale = slimeVisual.localScale;
+        // Flip the slime visually
+        Vector3 scale = transform.localScale;
         scale.x *= -1;
-        slimeVisual.localScale = scale;
+        transform.localScale = scale;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -70,7 +57,7 @@ public class SlimeEnemy : MonoBehaviour
             PlayerHealth player = collision.collider.GetComponent<PlayerHealth>();
             if (player != null)
             {
-                player.TakeDamage(1);
+                player.TakeDamage(1); // Deal 1 damage
             }
         }
     }
@@ -80,19 +67,23 @@ public class SlimeEnemy : MonoBehaviour
         if (isDead) return;
 
         isDead = true;
-        animator.SetTrigger("Die");
+
+        // Stop movement
         rb.velocity = Vector2.zero;
         rb.bodyType = RigidbodyType2D.Static;
 
-        Destroy(gameObject, 1f);
-    }
+        
+        this.enabled = false;
 
-    void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.red;
-        if (groundCheck != null)
-            Gizmos.DrawWireSphere(groundCheck.position, checkRadius);
-        if (wallCheck != null)
-            Gizmos.DrawWireSphere(wallCheck.position, checkRadius);
+        
+        foreach (Collider2D col in GetComponentsInChildren<Collider2D>())
+        {
+            col.enabled = false;
+        }
+
+        // Trigger death animation
+        animator.SetTrigger("Die");
+
+        
     }
 }

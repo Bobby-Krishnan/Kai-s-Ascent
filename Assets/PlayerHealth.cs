@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
 
 public class PlayerHealth : MonoBehaviour
 {
@@ -33,10 +35,10 @@ public class PlayerHealth : MonoBehaviour
         HealthChanged?.Invoke(currentHealth, maxHealth);
     }
 
-    void Die()
+    public void Die()
     {
         Debug.Log("Player died!");
-        // You can trigger a game over screen, respawn, etc.
-        gameObject.SetActive(false); // simple death for now
+        // goes back to title screen, change later for levels
+        SceneManager.LoadScene("TitleScreenScene");
     }
 }

@@ -2,26 +2,30 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
-    public Transform target;        // The player to follow
-    public Vector3 offset;          //  offset (e.g., x = 2 to look slightly ahead)
-    public float smoothSpeed = 0.125f; // Camera smoothing factor
+    public Transform player;             // The player to follow
+    public Vector3 offset;               
+    public float smoothSpeed = 0.125f;   
 
-    private float fixedY;           // Y position to lock camera at
-
-    void Start()
-    {
-        // Store the initial Y position so we can lock it
-        fixedY = transform.position.y;
-    }
+    public float leftLimit;
+    public float rightLimit;
+    public float bottomLimit;
+    public float topLimit;
 
     void LateUpdate()
     {
-        if (target != null)
-        {
-            // Only follow the target on the X axis
-            Vector3 desiredPosition = new Vector3(target.position.x + offset.x, fixedY, -10f);
-            Vector3 smoothed = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed);
-            transform.position = smoothed;
-        }
+        if (player == null) return;
+
+        // Target position based on player + offset
+        Vector3 targetPosition = player.position + offset;
+
+        
+        Vector3 smoothedPosition = Vector3.Lerp(transform.position, targetPosition, smoothSpeed);
+
+        
+        float clampedX = Mathf.Clamp(smoothedPosition.x, leftLimit, rightLimit);
+        float clampedY = Mathf.Clamp(smoothedPosition.y, bottomLimit, topLimit);
+
+        
+        transform.position = new Vector3(clampedX, clampedY, -10f);
     }
 }
