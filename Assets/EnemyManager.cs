@@ -7,6 +7,9 @@ public class EnemyManager : MonoBehaviour
 
     private int totalEnemies = 0;
 
+    // Assign this in the Inspector per scene (e.g., "Level2Scene", "TitleScreenScene")
+    [SerializeField] private string nextSceneName;
+
     void Awake()
     {
         if (instance == null)
@@ -26,8 +29,8 @@ public class EnemyManager : MonoBehaviour
 
         if (totalEnemies <= 0)
         {
-            Debug.Log("All enemies defeated! Returning to Title Screen...");
-            SceneManager.LoadScene("TitleScreenScene");
+            Debug.Log("All enemies defeated! Loading " + nextSceneName);
+            SceneManager.LoadScene(nextSceneName);
         }
     }
 }
