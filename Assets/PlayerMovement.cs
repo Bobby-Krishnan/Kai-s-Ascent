@@ -27,11 +27,17 @@ public class PlayerMovement : MonoBehaviour
     public bool canDoubleJump = false;
     private bool hasDoubleJumped = false;
 
+    // Audio
+    public AudioClip fireballSFX;
+    public AudioClip jumpSFX;
+    private AudioSource audioSource;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>(); // Ensure AudioSource is on the Player GameObject
     }
 
     void OnEnable()
@@ -83,7 +89,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (isGrounded)
         {
-            hasDoubleJumped = false; // reset double jump when landing
+            hasDoubleJumped = false;
         }
 
         if (Input.GetKeyDown(KeyCode.UpArrow))
@@ -91,12 +97,14 @@ public class PlayerMovement : MonoBehaviour
             if (isGrounded)
             {
                 rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+                PlaySFX(jumpSFX);
             }
             else if (canDoubleJump && !hasDoubleJumped)
             {
                 rb.velocity = new Vector2(rb.velocity.x, jumpForce);
                 hasDoubleJumped = true;
                 Debug.Log("Double Jump Activated!");
+                PlaySFX(jumpSFX);
             }
         }
     }
@@ -127,6 +135,16 @@ public class PlayerMovement : MonoBehaviour
             {
                 fb.SetDirection(direction);
             }
+
+            PlaySFX(fireballSFX);
+        }
+    }
+
+    void PlaySFX(AudioClip clip)
+    {
+        if (clip != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(clip);
         }
     }
 
