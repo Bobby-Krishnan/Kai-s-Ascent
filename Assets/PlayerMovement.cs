@@ -23,7 +23,7 @@ public class PlayerMovement : MonoBehaviour
 
     private bool facingRight = true;
 
-    // === Double Jump ===
+    // Double Jump 
     public bool canDoubleJump = false;
     private bool hasDoubleJumped = false;
 
