@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -22,11 +23,38 @@ public class PlayerMovement : MonoBehaviour
 
     private bool facingRight = true;
 
+    // === Double Jump ===
+    public bool canDoubleJump = false;
+    private bool hasDoubleJumped = false;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
+    }
+
+    void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == "Level3Scene")
+        {
+            canDoubleJump = true;
+            Debug.Log("Double Jump Unlocked!");
+        }
+        else
+        {
+            canDoubleJump = false;
+        }
     }
 
     void Update()
@@ -53,9 +81,23 @@ public class PlayerMovement : MonoBehaviour
     {
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, 0.1f, groundLayer);
 
-        if (Input.GetKeyDown(KeyCode.UpArrow) && isGrounded)
+        if (isGrounded)
         {
-            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+            hasDoubleJumped = false; // reset double jump when landing
+        }
+
+        if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            if (isGrounded)
+            {
+                rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+            }
+            else if (canDoubleJump && !hasDoubleJumped)
+            {
+                rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+                hasDoubleJumped = true;
+                Debug.Log("Double Jump Activated!");
+            }
         }
     }
 
@@ -69,13 +111,11 @@ public class PlayerMovement : MonoBehaviour
 
             float direction = facingRight ? 1f : -1f;
 
-            // Offset spawn position to avoid player collision
             Vector3 spawnPos = firePoint.position + new Vector3(direction * 0.5f, 0f, 0f);
             spawnPos.z = 0f;
 
             GameObject fireball = Instantiate(fireballPrefab, spawnPos, Quaternion.identity);
 
-            // Flip fireball sprite if needed
             fireball.transform.localScale = new Vector3(
                 Mathf.Abs(fireball.transform.localScale.x) * direction,
                 fireball.transform.localScale.y,

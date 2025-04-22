@@ -67088,6 +67088,7 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
+  canDoubleJump: 0
 --- !u!212 &1995809071
 SpriteRenderer:
   m_ObjectHideFlags: 0
