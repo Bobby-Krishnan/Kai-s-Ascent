@@ -72,3 +72,13 @@ Physics: Player and tilemaps use custom physics material with Friction = 0 for s
 Prefab Architecture: All enemies, UI popups, and fireballs are prefab-based
 
 Lessons Learned: This project was great in refining my skills in Unity. I began thinking about problems that I had not considered during the Unity Game Jam, such as creating a new physics material to put on walls to prevent collision, or how to properly manage the Canvas UI, and also the importance of using prefabs. I became familiar with the camera game object and its different utilities like zooming out to show more of the game screen, making the camera follow the player and keeping it fixed as a side scroller effect. I became more comfortable with scene management and handling of different scene triggers (this helped to make the game continue as long as someone wanted to play, such as Death -> Title and also Win - > Title. Lastly, I realized that I don’t need to make a separate script and reference it for every single thing but instead it is smarter to modularize sometimes and include certain components all in the same c# file. 
+
+Utilized these assets:
+Tile Map: https://v3x3d.itch.io/block-land/download/eyJpZCI6MTcyMTA1OSwiZXhwaXJlcyI6MTc0NDU4Njk2Mn0%3d.KknJumk2VQOiDVW1eHr%2blSpYf1E%3d
+
+Slime asset:
+https://tienlev.itch.io/slime-pixel-set/download/eyJpZCI6MTIwMDkxMywiZXhwaXJlcyI6MTc0NDY2Mzg2NH0%3d.gb%2fXgyTkC%2bZUrHvKlgTeDUz%2bDao%3d
+
+Background music: https://www.fesliyanstudios.com/royalty-free-music/downloads-c/8-bit-music/6
+
+Sound effects: https://kronbits.itch.io/freesfx
