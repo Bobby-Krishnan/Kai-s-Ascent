@@ -4055,6 +4055,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nextSceneName: TitleScreenScene
+  victoryTextPrefab: {fileID: 6032702881718333564, guid: 5804070f20ce44a7c8f4f20149b92db9, type: 3}
 --- !u!4 &1048604551
 Transform:
   m_ObjectHideFlags: 0

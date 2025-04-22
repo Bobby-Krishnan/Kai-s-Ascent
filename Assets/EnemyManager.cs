@@ -9,6 +9,7 @@ public class EnemyManager : MonoBehaviour
     private int totalEnemies = 0;
 
     [SerializeField] private string nextSceneName; // Set this in Inspector for each level
+    [SerializeField] private GameObject victoryTextPrefab; // Assign in Level 4 only
 
     private TextMeshProUGUI enemyCounterText;
 
@@ -47,8 +48,15 @@ public class EnemyManager : MonoBehaviour
 
         if (totalEnemies <= 0)
         {
-            Debug.Log("All enemies defeated! Loading next scene: " + nextSceneName);
-            SceneManager.LoadScene(nextSceneName);
+            if (SceneManager.GetActiveScene().name == "Level4Scene")
+            {
+                ShowVictoryMessage();
+            }
+            else
+            {
+                Debug.Log("All enemies defeated! Loading next scene: " + nextSceneName);
+                SceneManager.LoadScene(nextSceneName);
+            }
         }
     }
 
@@ -58,5 +66,23 @@ public class EnemyManager : MonoBehaviour
         {
             enemyCounterText.text = "Enemies Left: " + totalEnemies;
         }
+    }
+
+    private void ShowVictoryMessage()
+    {
+        Debug.Log("Final level complete. Showing victory text.");
+
+        GameObject hud = GameObject.Find("HUDCanvas");
+        if (hud != null && victoryTextPrefab != null)
+        {
+            Instantiate(victoryTextPrefab, hud.transform);
+        }
+
+        Invoke("ReturnToTitleScreen", 10f);
+    }
+
+    private void ReturnToTitleScreen()
+    {
+        SceneManager.LoadScene("TitleScreenScene");
     }
 }
