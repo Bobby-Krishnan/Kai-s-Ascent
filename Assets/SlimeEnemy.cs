@@ -18,6 +18,9 @@ public class SlimeEnemy : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponentInChildren<Animator>(); // Animator is on SlimeSprite
+
+        // Register this enemy with the EnemyManager
+        EnemyManager.instance?.RegisterEnemy();
     }
 
     void FixedUpdate()
@@ -72,10 +75,8 @@ public class SlimeEnemy : MonoBehaviour
         rb.velocity = Vector2.zero;
         rb.bodyType = RigidbodyType2D.Static;
 
-        
         this.enabled = false;
 
-        
         foreach (Collider2D col in GetComponentsInChildren<Collider2D>())
         {
             col.enabled = false;
@@ -84,6 +85,7 @@ public class SlimeEnemy : MonoBehaviour
         // Trigger death animation
         animator.SetTrigger("Die");
 
-        
+        // Notify EnemyManager
+        EnemyManager.instance?.EnemyDefeated();
     }
 }

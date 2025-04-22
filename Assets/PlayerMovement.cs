@@ -46,7 +46,7 @@ public class PlayerMovement : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (scene.name == "Level3Scene")
+        if (scene.name == "Level3Scene" || scene.name == "Level4Scene")
         {
             canDoubleJump = true;
             Debug.Log("Double Jump Unlocked!");

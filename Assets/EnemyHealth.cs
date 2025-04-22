@@ -11,9 +11,6 @@ public class EnemyHealth : MonoBehaviour
     {
         currentHealth = maxHealth;
         slimeEnemy = GetComponent<SlimeEnemy>();
-
-        if (slimeEnemy != null)
-            EnemyManager.instance?.RegisterEnemy();
     }
 
     public void TakeDamage(int amount)
@@ -22,8 +19,7 @@ public class EnemyHealth : MonoBehaviour
 
         if (currentHealth <= 0)
         {
-            slimeEnemy?.Die();
-            EnemyManager.instance?.EnemyDefeated();
+            slimeEnemy?.Die(); // SlimeEnemy will notify EnemyManager
         }
     }
 }
